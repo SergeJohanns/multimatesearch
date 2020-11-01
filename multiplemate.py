@@ -91,15 +91,15 @@ if __name__ == "__main__":
     args = parse_args()
     solver = Solver(moves=args.n, threads=args.t)
     with open(args.file, 'r') as games, open(args.o, 'w') as output:
-        i = 1
+        i = 0
         hits = 0
         for line in games:
-            print(f"Processing game {i}: {hits} total hits", end='\r')
             if line != '\n' and line[0] != '[' and not "eval" in line:
+                i += 1
+                print(f"Processing game {i}: {hits} total hits", end='\r')
                 positions = solver.find_positions(pgn_to_uci(line))
                 hits += len(positions)
                 output.writelines([position + '\n' for position in positions])
-                i += 1
         print(f"\n\nProcessed all {i} games in '{args.file}'.")
         print(f"Found {hits} positions with {args.n} or more different mate in one solutions.")
         print(f"Wrote results to '{args.o}'.")

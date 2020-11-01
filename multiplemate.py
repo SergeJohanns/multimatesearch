@@ -33,7 +33,7 @@ class Solver:
         self.stockfish.stdout.readline()
         results = []
         move = self.stockfish.stdout.readline()
-        while "bestmove" not in move:
+        while not move.startswith("bestmove"):
             if "score mate 1" in move:
                 move = move.split()
                 i = move.index("pv")

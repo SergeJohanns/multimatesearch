@@ -81,7 +81,7 @@ if __name__ == "__main__":
         i = 1
         hits = 0
         for line in games:
-            print(f'Processing game {i}: {hits} hits', end='\r')
+            print(f"Processing game {i}: {hits} hits", end='\r')
             if line != '\n' and line[0] != '[' and not "eval" in line:
                 positions = solver.find_positions(pgn_to_uci(line))
                 hits += len(positions)

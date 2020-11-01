@@ -94,9 +94,12 @@ if __name__ == "__main__":
         i = 1
         hits = 0
         for line in games:
-            print(f"Processing game {i}: {hits} hits", end='\r')
+            print(f"Processing game {i}: {hits} total hits", end='\r')
             if line != '\n' and line[0] != '[' and not "eval" in line:
                 positions = solver.find_positions(pgn_to_uci(line))
                 hits += len(positions)
                 output.writelines([position + '\n' for position in positions])
                 i += 1
+        print(f"\n\nProcessed all {i} games in '{args.file}'.")
+        print(f"Found {hits} positions with {args.n} or more different mate in one solutions.")
+        print(f"Wrote results to '{args.o}'.")

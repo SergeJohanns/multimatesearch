@@ -33,7 +33,7 @@ class Solver:
         results = []
         move = self.stockfish.stdout.readline()
         while "bestmove" not in move:
-            if "info depth 1" == move[:len("info depth 1")] and "score mate 1" in move:
+            if "score mate 1" in move:
                 move = move.split()
                 i = move.index("pv")
                 results.append(move[i + 1])

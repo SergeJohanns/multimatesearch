@@ -1,10 +1,11 @@
 #!/bin/env python3
 
 import subprocess
+from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 
 
 class Solver:
-    def __init__(self, moves=4, threads=4):
+    def __init__(self, moves=2, threads=1):
         self.moves = moves
         self.threads = threads
         self.stockfish = self.init_stockfish()
@@ -44,7 +45,7 @@ class Solver:
         res = []
         for i in range(len(moves)):
             self.play_moves(moves[:i + 1])
-            if len(self.get_mates()) >= 3:
+            if len(self.get_mates()) >= self.moves:
                 res.append(self.get_fen())
         return res
 
@@ -75,9 +76,21 @@ def pgn_to_uci(pgn):
     return uci
 
 
+def parse_args():
+    parser = ArgumentParser(prog="multimatesearch",
+                            description="Search a database of chess games for mate in one positions with at least n solutions.",
+                            formatter_class=ArgumentDefaultsHelpFormatter)
+    parser.add_argument("file", help="The file containing all of the games that should be processed.")
+    parser.add_argument('-o', metavar="<file>", help="place the output into <file>", default="positions.fen")
+    parser.add_argument('-n', metavar="<n>", type=int, default=2, help="only save positions with at least <n> different solutions")
+    parser.add_argument('-t', metavar="<threads>", type=int, default=1, help="run stockfish accross <threads> different threads")
+    return parser.parse_args()
+
+
 if __name__ == "__main__":
-    solver = Solver()
-    with open("lichess_db_standard_rated_2013-01.pgn", 'r') as games, open("output.txt", 'w') as output:
+    args = parse_args()
+    solver = Solver(moves=args.n, threads=args.t)
+    with open(args.file, 'r') as games, open(args.o, 'w') as output:
         i = 1
         hits = 0
         for line in games:

@@ -5,8 +5,9 @@ from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 
 
 class Solver:
-    def __init__(self, moves=2, threads=1):
+    def __init__(self, moves=2, mate=1, threads=1):
         self.moves = moves
+        self.mate = mate
         self.threads = threads
         self.stockfish = self.init_stockfish()
 
@@ -27,14 +28,14 @@ class Solver:
         self.stockfish.stdin.write(f"position startpos moves {' '.join(moves)}\n")
 
     def get_mates(self):
-        self.stockfish.stdin.write(f"go depth 1\n")
+        self.stockfish.stdin.write(f"go depth {self.mate * 2 - 1}\n")
         self.stockfish.stdin.flush()
         # [info string, move/depth 0 (if no possible moves), move... (n < self.moves), best move]
         self.stockfish.stdout.readline()
         results = []
         move = self.stockfish.stdout.readline()
         while not move.startswith("bestmove"):
-            if "score mate 1" in move:
+            if move.startswith(f"info depth {self.mate * 2 - 1}") and f"score mate {self.mate}" in move:
                 move = move.split()
                 i = move.index("pv")
                 results.append(move[i + 1])
@@ -78,18 +79,19 @@ def pgn_to_uci(pgn):
 
 def parse_args():
     parser = ArgumentParser(prog="multimatesearch",
-                            description="Search a database of chess games for mate in one positions with at least n solutions.",
+                            description="Search a database of chess games for mate in m positions with at least n solutions.",
                             formatter_class=ArgumentDefaultsHelpFormatter)
     parser.add_argument("file", help="The file containing all of the games that should be processed.")
     parser.add_argument('-o', metavar="<file>", help="place the output into <file>", default="positions.fen")
     parser.add_argument('-n', metavar="<n>", type=int, default=2, help="only save positions with at least <n> different solutions")
+    parser.add_argument('-m', metavar="<mate>", type=int, default=1, help="only save positions that are mate in <mate>")
     parser.add_argument('-t', metavar="<threads>", type=int, default=1, help="run stockfish accross <threads> different threads")
     return parser.parse_args()
 
 
 if __name__ == "__main__":
     args = parse_args()
-    solver = Solver(moves=args.n, threads=args.t)
+    solver = Solver(moves=args.n, mate=args.m, threads=args.t)
     with open(args.file, 'r') as games, open(args.o, 'w') as output:
         i = 0
         hits = 0
@@ -101,5 +103,5 @@ if __name__ == "__main__":
                 hits += len(positions)
                 output.writelines([position + '\n' for position in positions])
         print(f"\n\nProcessed all {i} games in '{args.file}'.")
-        print(f"Found {hits} positions with {args.n} or more different mate in one solutions.")
+        print(f"Found {hits} positions with {args.n} or more different mate in {args.m} solutions.")
         print(f"Wrote results to '{args.o}'.")

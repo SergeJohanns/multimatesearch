@@ -4,6 +4,8 @@ Game Notation, such as that of [lichess](https://database.lichess.org/), and
 find all positions that are forced mate in some minimum number of moves, and
 have some minimum number of solutions.
 
+![](img/example.gif)
+
 ## Motivation
 This script was developed for use by the
 [Lelystadse Schaakvereniging](http://lelystadseschaakvereniging.nl/), which has

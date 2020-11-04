@@ -62,7 +62,7 @@ popular operating systems:
 
 ## Usage
 ```
-usage: multimatesearch [-h] [-o <file>] [-n <n>] [-m <mate>] [-t <threads>] file
+usage: multimatesearch [-h] [-o <file>] [-n <n>] [-m <mate>] [-q] [-t <threads>] file
 
 Search a database of chess games for mate in m positions with at least n solutions.
 
@@ -74,6 +74,7 @@ optional arguments:
   -o <file>     place the output into <file> (default: positions.fen)
   -n <n>        only save positions with at least <n> different solutions (default: 2)
   -m <mate>     only save positions that are mate in <mate> (default: 1)
+  -q, --quiet   run without informative output (default: False)
   -t <threads>  run stockfish accross <threads> different threads (default: 1)
 ```
 

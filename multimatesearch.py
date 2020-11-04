@@ -1,5 +1,6 @@
 #!/bin/env python3
 
+import sys
 import subprocess
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 
@@ -93,7 +94,12 @@ def parse_args():
 if __name__ == "__main__":
     args = parse_args()
     solver = Solver(moves=args.n, mate=args.m, threads=args.t)
-    with open(args.file, 'r') as games, open(args.o, 'w') as output:
+    use_stdin, use_stdout = args.file == '-', args.o == '-'
+    if use_stdout:
+        args.quiet = True # STDOUT needs to be clear for the output
+    _games = open(args.file, 'r') if not use_stdin else sys.stdin
+    _output = open(args.o, 'w') if not use_stdout else sys.stdout
+    with _games as games, _output as output:
         i = 0
         hits = 0
         for line in games:

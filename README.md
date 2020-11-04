@@ -74,3 +74,7 @@ optional arguments:
   -m <mate>     only save positions that are mate in <mate> (default: 1)
   -t <threads>  run stockfish accross <threads> different threads (default: 1)
 ```
+
+## License
+Multimatesearch is distributed under the
+[MIT](https://choosealicense.com/licenses/mit/) license.

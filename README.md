@@ -1,5 +1,5 @@
 # Multimatesearch
-multimatesearch is a program for searching a database of chess games in Portable
+Multimatesearch is a program for searching a database of chess games in Portable
 Game Notation, such as that of [lichess](https://database.lichess.org/), and
 find all positions that are forced mate in some minimum number of moves, and
 have some minimum number of solutions.
@@ -44,8 +44,8 @@ popular operating systems:
 * Ubuntu/Debian: `sudo apt-get install stockfish`
 * Arch: `sudo pacman -S stockfish`
 * Mac: `brew install stockfish`
-* Windows: [Download](https://stockfishchess.org/download/) stockfish and
-    install stockfish as a command line program.
+* Windows: [Download](https://stockfishchess.org/download/) and install
+    stockfish as a command line program.
 
 ### Pgn-extract
 * Ubuntu/Debian: `sudo apt-get install pgn-extract`

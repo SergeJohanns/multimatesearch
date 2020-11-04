@@ -85,6 +85,7 @@ def parse_args():
     parser.add_argument('-o', metavar="<file>", help="place the output into <file>", default="positions.fen")
     parser.add_argument('-n', metavar="<n>", type=int, default=2, help="only save positions with at least <n> different solutions")
     parser.add_argument('-m', metavar="<mate>", type=int, default=1, help="only save positions that are mate in <mate>")
+    parser.add_argument('-q', '--quiet', action='store_true', help="run without informative output")
     parser.add_argument('-t', metavar="<threads>", type=int, default=1, help="run stockfish accross <threads> different threads")
     return parser.parse_args()
 
@@ -98,10 +99,12 @@ if __name__ == "__main__":
         for line in games:
             if line != '\n' and line[0] != '[' and not "eval" in line:
                 i += 1
-                print(f"Processing game {i}: {hits} total hits", end='\r')
+                if not args.quiet:
+                    print(f"Processing game {i}: {hits} total hits", end='\r')
                 positions = solver.find_positions(pgn_to_uci(line))
                 hits += len(positions)
                 output.writelines([position + '\n' for position in positions])
-        print(f"\n\nProcessed all {i} games in '{args.file}'.")
-        print(f"Found {hits} positions with {args.n} or more different mate in {args.m} solutions.")
-        print(f"Wrote results to '{args.o}'.")
+        if not args.quiet:
+            print(f"\n\nProcessed all {i} games in '{args.file if args.file != '-' else 'STDIN'}'.")
+            print(f"Found {hits} positions with {args.n} or more different mate in {args.m} solutions.")
+            print(f"Wrote results to '{args.o}'.")

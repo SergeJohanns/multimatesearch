@@ -95,8 +95,6 @@ if __name__ == "__main__":
     args = parse_args()
     solver = Solver(moves=args.n, mate=args.m, threads=args.t)
     use_stdin, use_stdout = args.file == '-', args.o == '-'
-    if use_stdout:
-        args.quiet = True # STDOUT needs to be clear for the output
     games = open(args.file, 'r') if not use_stdin else sys.stdin
     output = open(args.o, 'w') if not use_stdout else sys.stdout
     with games, output:
@@ -106,11 +104,11 @@ if __name__ == "__main__":
             if line != '\n' and line[0] != '[' and not "eval" in line:
                 i += 1
                 if not args.quiet:
-                    print(f"Processing game {i}: {hits} total hits", end='\r')
+                    print(f"Processing game {i}: {hits} total hits", end='\r', file=sys.stderr)
                 positions = solver.find_positions(pgn_to_uci(line))
                 hits += len(positions)
                 output.writelines([position + '\n' for position in positions])
         if not args.quiet:
-            print(f"\n\nProcessed all {i} games in '{args.file if args.file != '-' else 'STDIN'}'.")
-            print(f"Found {hits} positions with {args.n} or more different mate in {args.m} solutions.")
-            print(f"Wrote results to '{args.o}'.")
+            print(f"\n\nProcessed all {i} games in '{args.file if not use_stdin else 'STDIN'}'.", file=sys.stderr)
+            print(f"Found {hits} positions with {args.n} or more different mate in {args.m} solutions.", file=sys.stderr)
+            print(f"Wrote results to '{args.o if not use_stdout else 'STDOUT'}'.", file=sys.stderr)

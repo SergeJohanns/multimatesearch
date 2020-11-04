@@ -23,7 +23,11 @@ always return real positions from real online games.
 
 ## Features
 * Configurable minimum on the mate depth and the amount of solutions.
-* Lazy file reading, so you can parse large files without running out of memory.
+* Lazy file reading, so you can parse large files without running out of
+    memory.
+* Adherance to the Unix style for tools, e.g. '-' can be substituted for a
+    filename to read from stdin or write to stdout, and all messages (not
+    output) are written to stderr.
 
 ## Known limitations
 * If the depth of the mate is high, there is a chance that not every positions
